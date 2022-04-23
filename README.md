@@ -3,6 +3,7 @@
 ### Development setup
 
 **0. Prerequisites**
+
 Install [NodeJS](https://nodejs.org/en/)
 
 **1. Go to root directory of the project on terminal**
