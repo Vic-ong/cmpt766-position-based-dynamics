@@ -1,0 +1,22 @@
+{
+  "name": "cmpt766-position-based-dynamics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:rope": "browserify src/rope.js | indexhtmlify > dist/rope.html",
+    "build:ropeAndWind": "browserify src/ropeAndWind.js | indexhtmlify > dist/ropeAndWind.html",
+    "build:encanto": "browserify src/encanto.js | indexhtmlify > dist/encanto.html",
+    "build": "npm run build:rope && npm run build:ropeAndWind && npm run build:encanto"
+  },
+  "author": "Vic Ong",
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^17.0.0",
+    "gl-vec3": "^1.1.3",
+    "indexhtmlify": "^2.0.1",
+    "regl": "^2.1.0",
+    "regl-camera": "^2.1.1"
+  }
+}
