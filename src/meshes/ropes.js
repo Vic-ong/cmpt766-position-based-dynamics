@@ -1,7 +1,7 @@
 const Particle = require('./Particle');
 const Mesh = require('./Mesh');
 const { createVertices } = require('./utils');
-const { getColor } = require('../color');
+const { getColor } = require('../utils/color');
 
 const createRopeMesh = ({
   subdivisions = 10,
@@ -40,7 +40,7 @@ const createRopeMesh = ({
       position: pos,
       velocity: [0, 0, 0],
       attrs: {
-        restPosition: pos,
+        restPosition: JSON.parse(JSON.stringify(pos)), // deep copy
         proposedPosition: [0, 0, 0],
       },
     }));
@@ -53,21 +53,105 @@ const createRopeMesh = ({
       });
     }
   }
-
-  // mesh.attrs.constraints.positions = [
-  //   {
-  //     i: 0,
-  //     position: mesh.vertices[0].position,
-  //   },
-  //   {
-  //     i: subdivisions,
-  //     position: mesh.vertices[subdivisions].position,
-  //   },
-  // ];
   
   return mesh;
 };
 
+const createEncantoRoofMesh = ({
+  subdivisions,
+  length,
+  mass,
+  offset,
+  color,
+  timestep = 1 / 60,
+  gapLength = 3,
+  force = [0, 5, 0],
+  time = {
+    delay: 0,
+    postDelay: 0,
+  },
+  reverse = false,
+} = {}) => {
+  const mesh = createRopeMesh({
+    subdivisions,
+    length,
+    mass,
+    offset,
+    color,
+  });
+
+  mesh.attrs.time = {
+    timer: false,
+    ...time,
+  };
+
+  // Set moving point constraint indexes
+  const posStartIndex = 0;
+  mesh.attrs.constraints.movingPositions = {
+    currIndex: 0,
+    indexes: [],
+  };
+  if (reverse) {
+    // +x to -x
+    for(let i = mesh.vertices.length - 1 - (gapLength * 2); i >= posStartIndex; i--) {
+      mesh.attrs.constraints.movingPositions.indexes.push([
+        i,
+        i + (gapLength * 2),
+      ]);
+    }
+  } else {
+    // -x to +x
+    for(let i = posStartIndex; i < mesh.vertices.length - (gapLength * 2); i++) {
+      mesh.attrs.constraints.movingPositions.indexes.push([
+        i,
+        i + (gapLength * 2),
+      ]);
+    }
+  }
+
+  // Set moving forces
+  const startIndex = gapLength;
+  mesh.attrs.movingForces = {
+    currIndex: 0,
+    forces: [],
+  };
+  let fMultiplier = 1;
+  if (reverse) {
+    // +x to -x
+    for(let i = mesh.vertices.length - 1 - startIndex; i >= startIndex; i--) {
+      mesh.attrs.movingForces.forces.push({
+        i,
+        force: [0, force[1] * fMultiplier, 0],
+        fMultiplier,
+      });
+      if (fMultiplier < 1 / timestep && i >= mesh.vertices.length - startIndex - 1 / timestep) {
+        fMultiplier++;
+      }
+      if (i < 1 / timestep + startIndex) {
+        fMultiplier--;
+      }
+    }
+  } else {
+    // -x to +x
+    for(let i = startIndex; i < mesh.vertices.length - startIndex; i++) {
+      mesh.attrs.movingForces.forces.push({
+        i,
+        force: [0, force[1] * fMultiplier, 0],
+        fMultiplier,
+      });
+      if (fMultiplier < 1 / timestep && i < mesh.vertices.length - startIndex - 1 / timestep) {
+        fMultiplier++;
+      }
+      if (i >= mesh.vertices.length - startIndex - 1 / timestep) {
+        fMultiplier--;
+      }
+    }
+  }
+
+  return mesh;
+};
+
+// Generate data render lines based on the rope point mesh
 const getRopeLinesMesh = (mesh) => {
   const positions = mesh.attrs.constraints.distances.reduce((acc, curr) => {
     acc.push(mesh.vertices[curr.i1].position);
@@ -84,5 +168,6 @@ const getRopeLinesMesh = (mesh) => {
 
 module.exports = {
   createRopeMesh,
+  createEncantoRoofMesh,
   getRopeLinesMesh,
 };

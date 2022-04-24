@@ -23,7 +23,7 @@ const estimateProposedPosition = (mesh, timestep) => {
 };
 
 // Update p to satisfy constraints
-const projectConstraints = (mesh) => {
+const projectDistanceConstraints = (mesh) => {
   const delta_p = [0, 0, 0];
   const n = [0, 0, 0];
 
@@ -83,7 +83,7 @@ module.exports = {
   applyExternalForce,
   applyVelocityDamping,
   estimateProposedPosition,
-  projectConstraints,
+  projectDistanceConstraints,
   updateVelocities,
   updatePositions,
 };

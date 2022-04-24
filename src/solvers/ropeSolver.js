@@ -3,7 +3,7 @@ const {
   applyExternalForce,
   applyVelocityDamping,
   estimateProposedPosition,
-  projectConstraints,
+  projectDistanceConstraints,
   updateVelocities,
   updatePositions,
 } = require('./constraints');
@@ -31,13 +31,14 @@ const projectRopePointConstraints = (mesh) => {
 //   })
 // };
 
-const solve = ({ mesh, damping, timestep, iterationCount, gravity }) => {
+const solve = ({ mesh, damping, timestep, iterationCount, props = {} }) => {
+  const { gravity } = props;
   applyExternalForce(mesh, gravity, timestep);
   applyVelocityDamping(mesh, damping);
   estimateProposedPosition(mesh, timestep);
 
   while (iterationCount--) {
-    projectConstraints(mesh);
+    projectDistanceConstraints(mesh);
     projectRopePointConstraints(mesh);
   }
 

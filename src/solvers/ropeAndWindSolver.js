@@ -3,25 +3,19 @@ const {
   applyExternalForce,
   applyVelocityDamping,
   estimateProposedPosition,
-  projectConstraints,
+  projectDistanceConstraints,
   updateVelocities,
   updatePositions,
 } = require('./constraints');
 const { getRandomInt } = require('./utils');
 
-// Simulate wind using random force values
+// Simulate wind forcce
 // v_new = v_old + (force * dt)
-let t = 0;
-let f = [0, 0, 0];
 const applyWindForces = (mesh, timestep) => {
-  f = [0, getRandomInt(100, 500), 0];
+  force = [0, getRandomInt(100, 500), 0];
   vertIndex = getRandomInt(1, mesh.vertices.length - 2);
-  if (t === mesh.vertices.length - 1) {
-    t = 0;
-  }
   const velocity = mesh.vertices[vertIndex].velocity;
-  scaleAndAdd(velocity, velocity, f, timestep);
-  t++;
+  scaleAndAdd(velocity, velocity, force, timestep);
 };
 
 // Constraint both ends of the rope
@@ -32,14 +26,15 @@ const projectRopePointConstraints = (mesh) => {
   })
 };
 
-const solve = ({ mesh, damping, timestep, iterationCount, gravity }) => {
+const solve = ({ mesh, damping, timestep, iterationCount, props = {} }) => {
+  const { gravity } = props;
   applyExternalForce(mesh, gravity, timestep);
   applyWindForces(mesh, timestep);
   applyVelocityDamping(mesh, damping);
   estimateProposedPosition(mesh, timestep);
 
   while (iterationCount--) {
-    projectConstraints(mesh);
+    projectDistanceConstraints(mesh);
     projectRopePointConstraints(mesh);
   }
 

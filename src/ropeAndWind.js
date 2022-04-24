@@ -1,8 +1,8 @@
-const { initRender, updateFrame, draw } = require('./renderer');
+const { initRender, updateFrame, draw } = require('./utils/renderer');
 const { createAxes } = require('./meshes/axes');
 const { createRopeMesh, getRopeLinesMesh } = require('./meshes/ropes');
 const { solve } = require('./solvers/ropeAndWindSolver');
-const { getColor } = require('./color');
+const { getColor } = require('./utils/color');
 const { degToRad } = require('./solvers/utils');
 
 const TIMESTEP = 1 / 60;
@@ -82,21 +82,27 @@ const solver = () => {
     damping: DAMPING_COEFFICIENT,
     timestep: TIMESTEP,
     iterationCount: ITERATIONS,
-    gravity: GRAVITY,
+    props: {
+      gravity: GRAVITY,
+    },
   });
   solve({
     mesh: ropeMesh2,
     damping: DAMPING_COEFFICIENT,
     timestep: TIMESTEP,
     iterationCount: ITERATIONS,
-    gravity: GRAVITYx10,
+    props: {
+      gravity: GRAVITYx10,
+    },
   });
   solve({
     mesh: ropeMesh3,
     damping: DAMPING_COEFFICIENT,
     timestep: TIMESTEP,
     iterationCount: ITERATIONS,
-    gravity: GRAVITYx100,
+    props: {
+      gravity: GRAVITYx100,
+    },
   });
 };
 

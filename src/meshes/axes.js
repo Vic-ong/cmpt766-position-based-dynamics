@@ -1,6 +1,6 @@
 const Mesh = require('./Mesh');
 const { createVertices } = require('./utils');
-const { red, blue, green } = require('../color');
+const { red, blue, green } = require('../utils/color');
 
 const createAxes = () => {
   const axisLength = 50;

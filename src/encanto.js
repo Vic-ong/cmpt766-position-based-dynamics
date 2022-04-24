@@ -1,60 +1,122 @@
-const { initRender, updateFrame, draw } = require('./renderer');
+const { initRender, updateFrame, draw } = require('./utils/renderer');
 const { createAxes } = require('./meshes/axes');
-const { createRopeMesh, getRopeLinesMesh } = require('./meshes/ropes');
+const { createEncantoRoofMesh, getRopeLinesMesh } = require('./meshes/ropes');
 const { solve } = require('./solvers/encantoSolver');
-const { getColor } = require('./color');
 const { degToRad } = require('./solvers/utils');
+const { getColor } = require('./utils/color');
 
-const TIMESTEP = 1 / 60;
+const TIMESTEP = 1 / 30;
 const ITERATIONS = 30;
 const DAMPING_COEFFICIENT = 0.99;
-const GRAVITY = [0, -10, 0];
 
 // Initializations
 initRender({
   camera: {
-    center: [10, 0, 0],
+    center: [14, 5, 0],
     distance: 30,
-    theta: degToRad(80),
-    phi: degToRad(10),
+    theta: degToRad(92),
+    phi: degToRad(5),
   }
 });
 
 // Get meshes
 const axes = createAxes();
-const ropeMesh = createRopeMesh({
+const roofTopMesh = createEncantoRoofMesh({
   subdivisions: 200,
-  length: 25,
+  length: 30,
   mass: 1,
-  offset: [0, 0, 0],
+  offset: [0, 10, 0],
+  color: getColor(234, 111, 81),
+  timestep: TIMESTEP,
+  gapLength: 15,
+  force: [0, 5, 0],
+  reverse: false,
 });
-ropeMesh.attrs.constraints.positions = [
-  {
-    i: 0,
-    position: ropeMesh.vertices[0].position,
+const roofLeftCenterMesh = createEncantoRoofMesh({
+  subdivisions: 150,
+  length: 10,
+  mass: 1,
+  offset: [0, 4, 3],
+  color: getColor(181, 67, 38),
+  timestep: TIMESTEP,
+  gapLength: 20,
+  force: [0, 7, 0],
+  reverse: true,
+  time: {
+    delay: 1.5,
+    postDelay: 1.5,
   },
-  {
-    i: ropeMesh.attrs.subdivisions,
-    position: ropeMesh.vertices[ropeMesh.attrs.subdivisions].position,
+});
+const roofFrontCenterMesh = createEncantoRoofMesh({
+  subdivisions: 150,
+  length: 10,
+  mass: 1,
+  offset: [10, 4, 6],
+  color: getColor(149, 12, 58),
+  timestep: TIMESTEP,
+  gapLength: 20,
+  force: [0, 7, 0],
+  reverse: true,
+  time: {
+    delay: 0.75,
+    postDelay: 1.5,
   },
-];
+});
+const roofRightCenterMesh = createEncantoRoofMesh({
+  subdivisions: 150,
+  length: 10,
+  mass: 1,
+  offset: [20, 4, 3],
+  color: getColor(198, 90, 147),
+  timestep: TIMESTEP,
+  gapLength: 20,
+  force: [0, 7, 0],
+  reverse: true,
+  time: {
+    delay: 0,
+    postDelay: 1.5,
+  },
+});
 
 // Get solver
 const solver = () => {
   solve({
-    mesh: ropeMesh,
+    mesh: roofTopMesh,
     damping: DAMPING_COEFFICIENT,
     timestep: TIMESTEP,
     iterationCount: ITERATIONS,
-    gravity: GRAVITY,
+  });
+  solve({
+    mesh: roofRightCenterMesh,
+    damping: DAMPING_COEFFICIENT,
+    timestep: TIMESTEP,
+    iterationCount: ITERATIONS,
+  });
+  solve({
+    mesh: roofFrontCenterMesh,
+    damping: DAMPING_COEFFICIENT,
+    timestep: TIMESTEP,
+    iterationCount: ITERATIONS,
+  });
+  solve({
+    mesh: roofLeftCenterMesh,
+    damping: DAMPING_COEFFICIENT,
+    timestep: TIMESTEP,
+    iterationCount: ITERATIONS,
   });
 };
 
 // Render
 const drawer = () => {
   axes.forEach((axis) => draw(axis));
-  draw(ropeMesh);
-  draw(getRopeLinesMesh(ropeMesh));
+  draw(roofTopMesh);
+  draw(getRopeLinesMesh(roofTopMesh));
+  draw(roofLeftCenterMesh);
+  draw(getRopeLinesMesh(roofLeftCenterMesh));
+  draw(roofRightCenterMesh);
+  draw(getRopeLinesMesh(roofRightCenterMesh));
+  draw(roofFrontCenterMesh);
+  draw(getRopeLinesMesh(roofFrontCenterMesh));
 };
 
 // Run program
