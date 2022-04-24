@@ -115,52 +115,6 @@ const createEncantoRoofMesh = ({
     currIndex: 0,
     forces: [],
   };
-  let fMultiplier = 1;
-  // if (reverse) {
-  //   // +x to -x
-  //   for(let i = mesh.vertices.length - 1 - startIndex; i >= startIndex; i--) {
-  //     mesh.attrs.movingForces.forces.push({
-  //       i,
-  //       force: [0, force[1] * fMultiplier, 0],
-  //       fMultiplier,
-  //     });
-  //     if (fMultiplier < 1 / timestep && i >= mesh.vertices.length - startIndex - 1 / timestep) {
-  //       fMultiplier++;
-  //     }
-  //     if (i < 1 / timestep + startIndex) {
-  //       fMultiplier--;
-  //     }
-  //   }
-  // } else {
-  //   // -x to +x
-  //   for(let i = startIndex; i < mesh.vertices.length - startIndex; i++) {
-  //     mesh.attrs.movingForces.forces.push({
-  //       i,
-  //       force: [0, force[1] * fMultiplier, 0],
-  //       fMultiplier,
-  //     });
-  //     if (fMultiplier < 1 / timestep && i < mesh.vertices.length - startIndex - 1 / timestep) {
-  //       fMultiplier++;
-  //     }
-  //     if (i >= mesh.vertices.length - startIndex - 1 / timestep) {
-  //       fMultiplier--;
-  //     }
-  //   }
-  // }
-
-  // forces: [
-  //   [
-  //     {
-  //       i,
-  //       force:
-  //     },
-  //     {
-  //       i,
-  //       force:
-  //     }
-  //   ]
-  // ]
-
   if (reverse) {
     // +x to -x
     for(let i = mesh.vertices.length - 1 - startIndex; i >= startIndex; i--) {

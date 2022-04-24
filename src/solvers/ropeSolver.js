@@ -16,20 +16,6 @@ const projectRopePointConstraints = (mesh) => {
     copy(mesh.vertices[i].attrs.proposedPosition, position);
   })
 };
-// const projectMovingRopePointConstraints = (mesh, timestep) => {
-//   mesh.attrs.constraints.positions.forEach((pos, posIndex) => {
-//     const { i, position } = pos;
-//     let newPos = position;
-//     if (posIndex === 1) {
-//       newPos = [
-//         position[0],
-//         position[1] + Math.sin(performance.now() / 1000) * timestep,
-//         position[2] + Math.sin(performance.now() / 1000) * timestep,
-//       ];
-//     }
-//     copy(mesh.vertices[i].attrs.proposedPosition, newPos);
-//   })
-// };
 
 const solve = ({ mesh, damping, timestep, iterationCount, props = {} }) => {
   const { gravity } = props;

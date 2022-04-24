@@ -22,22 +22,6 @@ const estimateProposedPosition = (mesh, timestep) => {
   });
 };
 
-// Generate collisions
-const generateCollisionConstraints = (mesh, collider) => {
-  const colDirection = [0, 0, 0];
-
-  for(let i = 1; i < collider.vertices.length; i++) {
-    const { position, attrs } = collider.vertices[i];
-    subtract(colDirection, attrs.proposedPosition, position);
-
-    const { vertices, attrs: meshAttrs } = mesh;
-    const sameDirAsNormal = dot(meshAttrs.normals, colDirection) > 0;
-    const aboveFloor = position[1] > 0;
-    if (!aboveFloor) {
-    }
-  }
-};
-
 // Update p to satisfy constraints
 const projectDistanceConstraints = (mesh) => {
   const delta_p = [0, 0, 0];
