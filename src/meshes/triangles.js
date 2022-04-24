@@ -1,7 +1,7 @@
 const { subtract, cross, normalize } = require("gl-vec3");
 const Mesh = require('./Mesh');
 const { createVertices } = require('./utils');
-const { grey } = require('../color');
+const { getColor } = require('../utils/color');
 
 const e1 = [ 0, 0, 0 ];
 const e2 = [ 0, 0, 0 ];
@@ -27,15 +27,15 @@ const createTriangleMesh = (vertices, color) => {
   return mesh;
 };
 
-const createBasicTriangle = () => {
+const createFloor = () => {
   const vertices = createVertices([
-    [0, 10, 0],
-    [0, -10, 10],
-    [0, -10, -10],
+    [10, 0, -10],
+    [-10, 0, 0],
+    [10, 0, 10],
   ])
-  return createTriangleMesh(vertices, grey);
+  return createTriangleMesh(vertices, getColor(188, 188, 188, 0.8));
 };
 
 module.exports = {
-  createBasicTriangle,
+  createFloor,
 };

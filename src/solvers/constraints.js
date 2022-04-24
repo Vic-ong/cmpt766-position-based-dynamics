@@ -1,4 +1,4 @@
-const { length, scale, scaleAndAdd, subtract, copy } = require("gl-vec3");
+const { length, scale, scaleAndAdd, subtract, copy, dot } = require("gl-vec3");
 
 // v_new = v_old + (force * dt)
 const applyExternalForce = (mesh, force, timestep) => {
@@ -20,6 +20,22 @@ const estimateProposedPosition = (mesh, timestep) => {
   mesh.vertices.forEach(({ position, velocity, attrs }) => {
     scaleAndAdd(attrs.proposedPosition, position, velocity, timestep);
   });
+};
+
+// Generate collisions
+const generateCollisionConstraints = (mesh, collider) => {
+  const colDirection = [0, 0, 0];
+
+  for(let i = 1; i < collider.vertices.length; i++) {
+    const { position, attrs } = collider.vertices[i];
+    subtract(colDirection, attrs.proposedPosition, position);
+
+    const { vertices, attrs: meshAttrs } = mesh;
+    const sameDirAsNormal = dot(meshAttrs.normals, colDirection) > 0;
+    const aboveFloor = position[1] > 0;
+    if (!aboveFloor) {
+    }
+  }
 };
 
 // Update p to satisfy constraints
@@ -83,6 +99,7 @@ module.exports = {
   applyExternalForce,
   applyVelocityDamping,
   estimateProposedPosition,
+  generateCollisionConstraints,
   projectDistanceConstraints,
   updateVelocities,
   updatePositions,

@@ -7,10 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:rope": "browserify src/rope.js | indexhtmlify > dist/rope.html",
     "build:ropeAndWind": "browserify src/ropeAndWind.js | indexhtmlify > dist/ropeAndWind.html",
+    "build:inflatableAirPuppet": "browserify src/inflatableAirPuppet.js | indexhtmlify > dist/inflatableAirPuppet.html",
     "build:encantoSingle": "browserify src/encantoSingle.js | indexhtmlify > dist/encantoSingle.html",
     "build:encanto": "browserify src/encanto.js | indexhtmlify > dist/encanto.html",
 
-    "build:all": "npm run build:rope && npm run build:ropeAndWind && npm run build:encanto && npm run build:encantoSingle"
+    "build:all": "npm run build:rope && npm run build:ropeAndWind && npm run build:inflatableAirPuppet && npm run build:encanto && npm run build:encantoSingle"
   },
   "author": "Vic Ong",
   "license": "ISC",
