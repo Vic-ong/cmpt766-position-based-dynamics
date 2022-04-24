@@ -1,6 +1,5 @@
 const { initRender, updateFrame, draw } = require('./utils/renderer');
 const { createAxes } = require('./meshes/axes');
-const { createFloor } = require('./meshes/triangles');
 const { createRopeMesh, getRopeLinesMesh } = require('./meshes/ropes');
 const { solve } = require('./solvers/inflatableAirPuppetSolver');
 const { getColor } = require('./utils/color');
@@ -23,10 +22,9 @@ initRender({
 
 // Get meshes
 const axes = createAxes();
-const floor = createFloor();
 const ropeMesh = createRopeMesh({
   subdivisions: 100,
-  length: 10,
+  length: 15,
   mass: 1,
   offset: [0, 0, 0],
   color: getColor(213, 197, 47),
@@ -47,7 +45,6 @@ const solver = () => {
     iterationCount: ITERATIONS,
     props: {
       gravity: GRAVITY,
-      floor,
     },
   });
 };
@@ -55,7 +52,6 @@ const solver = () => {
 // Render
 const drawer = () => {
   axes.forEach((axis) => draw(axis));
-  draw(floor);
   draw(ropeMesh);
   draw(getRopeLinesMesh(ropeMesh));
 };
