@@ -1,6 +1,6 @@
 const Particle = require('./Particle');
 const Mesh = require('./Mesh');
-const { createVertices } = require('./utils');
+const { createVertices, calcEncantoPartitionRatio } = require('./utils');
 const { getColor } = require('../utils/color');
 
 const createRopeMesh = ({
@@ -116,35 +116,100 @@ const createEncantoRoofMesh = ({
     forces: [],
   };
   let fMultiplier = 1;
+  // if (reverse) {
+  //   // +x to -x
+  //   for(let i = mesh.vertices.length - 1 - startIndex; i >= startIndex; i--) {
+  //     mesh.attrs.movingForces.forces.push({
+  //       i,
+  //       force: [0, force[1] * fMultiplier, 0],
+  //       fMultiplier,
+  //     });
+  //     if (fMultiplier < 1 / timestep && i >= mesh.vertices.length - startIndex - 1 / timestep) {
+  //       fMultiplier++;
+  //     }
+  //     if (i < 1 / timestep + startIndex) {
+  //       fMultiplier--;
+  //     }
+  //   }
+  // } else {
+  //   // -x to +x
+  //   for(let i = startIndex; i < mesh.vertices.length - startIndex; i++) {
+  //     mesh.attrs.movingForces.forces.push({
+  //       i,
+  //       force: [0, force[1] * fMultiplier, 0],
+  //       fMultiplier,
+  //     });
+  //     if (fMultiplier < 1 / timestep && i < mesh.vertices.length - startIndex - 1 / timestep) {
+  //       fMultiplier++;
+  //     }
+  //     if (i >= mesh.vertices.length - startIndex - 1 / timestep) {
+  //       fMultiplier--;
+  //     }
+  //   }
+  // }
+
+  // forces: [
+  //   [
+  //     {
+  //       i,
+  //       force:
+  //     },
+  //     {
+  //       i,
+  //       force:
+  //     }
+  //   ]
+  // ]
+
   if (reverse) {
     // +x to -x
     for(let i = mesh.vertices.length - 1 - startIndex; i >= startIndex; i--) {
-      mesh.attrs.movingForces.forces.push({
-        i,
-        force: [0, force[1] * fMultiplier, 0],
-        fMultiplier,
-      });
-      if (fMultiplier < 1 / timestep && i >= mesh.vertices.length - startIndex - 1 / timestep) {
-        fMultiplier++;
+      const forces = [];
+      for (let j = 1; j <= gapLength; j++) {
+        const partition = j / gapLength;
+        const fy = force[1] * calcEncantoPartitionRatio(partition);
+        if (j === 1) {
+          forces.push({
+            i,
+            force: [0, fy, 0],
+          });
+        } else {
+          forces.unshift({
+            i: i - j + 1,
+            force: [0, fy, 0],
+          });
+          forces.push({
+            i: i + j - 1,
+            force: [0, fy, 0],
+          });
+        }
       }
-      if (i < 1 / timestep + startIndex) {
-        fMultiplier--;
-      }
+      mesh.attrs.movingForces.forces.push(forces);
     }
   } else {
     // -x to +x
     for(let i = startIndex; i < mesh.vertices.length - startIndex; i++) {
-      mesh.attrs.movingForces.forces.push({
-        i,
-        force: [0, force[1] * fMultiplier, 0],
-        fMultiplier,
-      });
-      if (fMultiplier < 1 / timestep && i < mesh.vertices.length - startIndex - 1 / timestep) {
-        fMultiplier++;
+      const forces = [];
+      for (let j = 1; j <= gapLength; j++) {
+        const partition = j / gapLength;
+        const fy = force[1] * calcEncantoPartitionRatio(partition);
+        if (j === 1) {
+          forces.push({
+            i,
+            force: [0, fy, 0],
+          });
+        } else {
+          forces.unshift({
+            i: i - j + 1,
+            force: [0, fy, 0],
+          });
+          forces.push({
+            i: i + j - 1,
+            force: [0, fy, 0],
+          });
+        }
       }
-      if (i >= mesh.vertices.length - startIndex - 1 / timestep) {
-        fMultiplier--;
-      }
+      mesh.attrs.movingForces.forces.push(forces);
     }
   }
 

@@ -7,7 +7,7 @@ const { degToRad } = require('./solvers/utils');
 const TIMESTEP = 1 / 30;
 const ITERATIONS = 30;
 const DAMPING_COEFFICIENT = 0.99;
-const GAP_LENGTH = 12;
+const GAP_LENGTH = 10;
 
 const main = () => {
   // Initializations
@@ -29,9 +29,11 @@ const main = () => {
     offset: [0, 0, 0],
     timestep: TIMESTEP,
     gapLength: GAP_LENGTH,
-    force: [0, 5, 0],
-    reverse: false,
+    force: [0, 10, 0],
+    reverse: true,
   });
+
+  console.log(roofMesh);
 
   // Get solver
   const solver = () => {

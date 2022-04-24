@@ -8,6 +8,14 @@ const { getColor } = require('./utils/color');
 const TIMESTEP = 1 / 30;
 const ITERATIONS = 30;
 const DAMPING_COEFFICIENT = 0.99;
+const BASE_GAP = 15;
+const BASE_DELAY = 0.8;
+
+const WIDTH = 1;
+const HEIGHT = 1;
+
+const GAP_LENGTH = Math.floor(BASE_GAP * WIDTH);
+const FORCE_MULTIPLIER = HEIGHT * WIDTH;
 
 const main = () => {
   // Initializations
@@ -29,53 +37,53 @@ const main = () => {
     offset: [0, 10, 0],
     color: getColor(234, 111, 81),
     timestep: TIMESTEP,
-    gapLength: 15,
-    force: [0, 5, 0],
+    gapLength: GAP_LENGTH,
+    force: [0, 20 * FORCE_MULTIPLIER, 0],
     reverse: false,
   });
   const roofLeftCenterMesh = createEncantoRoofMesh({
-    subdivisions: 150,
+    subdivisions: 100,
     length: 10,
     mass: 1,
     offset: [0, 4, 3],
     color: getColor(181, 67, 38),
     timestep: TIMESTEP,
-    gapLength: 20,
-    force: [0, 7, 0],
+    gapLength: GAP_LENGTH,
+    force: [0, 20 * FORCE_MULTIPLIER, 0],
     reverse: true,
     time: {
-      delay: 1.5,
-      postDelay: 1.5,
+      delay: BASE_DELAY,
+      postDelay: BASE_DELAY,
     },
   });
   const roofFrontCenterMesh = createEncantoRoofMesh({
-    subdivisions: 150,
+    subdivisions: 100,
     length: 10,
     mass: 1,
     offset: [10, 4, 6],
     color: getColor(149, 12, 58),
     timestep: TIMESTEP,
-    gapLength: 20,
-    force: [0, 7, 0],
+    gapLength: GAP_LENGTH,
+    force: [0, 20 * FORCE_MULTIPLIER, 0],
     reverse: true,
     time: {
-      delay: 0.75,
-      postDelay: 1.5,
+      delay: BASE_DELAY / 2,
+      postDelay: BASE_DELAY,
     },
   });
   const roofRightCenterMesh = createEncantoRoofMesh({
-    subdivisions: 150,
+    subdivisions: 100,
     length: 10,
     mass: 1,
     offset: [20, 4, 3],
     color: getColor(198, 90, 147),
     timestep: TIMESTEP,
-    gapLength: 20,
-    force: [0, 7, 0],
+    gapLength: GAP_LENGTH,
+    force: [0, 20 * FORCE_MULTIPLIER, 0],
     reverse: true,
     time: {
       delay: 0,
-      postDelay: 1.5,
+      postDelay: BASE_DELAY,
     },
   });
 
