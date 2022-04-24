@@ -7,13 +7,11 @@ const {
   updateVelocities,
   updatePositions,
 } = require('./constraints');
-const { getRandomInt } = require('./utils');
 
 // Simulate wind forcce
 // v_new = v_old + (force * dt)
 let forceIndex = 0;
-const applyAdditionalPressureForces = (mesh, timestep) => {
-  force = [0, getRandomInt(10, 30), 0];
+const applyAdditionalPressureForces = (mesh, force, timestep) => {
   const velocity = mesh.vertices[forceIndex].velocity;
   scaleAndAdd(velocity, velocity, force, timestep);
 
@@ -38,15 +36,14 @@ const projectRopePointConstraints = (mesh) => {
 };
 
 const solve = ({ mesh, damping, timestep, iterationCount, props = {} }) => {
-  const { gravity } = props;
+  const { gravity, pressure, wind } = props;
   const totalForce = [0, 0, 0];
-  const pressureForce = [0, 8, 0]; // existing in the air puppet to keep it midly afloat
-  const windForce = [getRandomInt(-20, 20), 0, getRandomInt(-20, 20)]; // random wind
-  add(totalForce, gravity, pressureForce);
-  add(totalForce, totalForce, windForce)
+  const existingPressure = [0, 8, 0]; // existing in the air puppet to keep it midly afloat
+  add(totalForce, gravity, existingPressure);
+  add(totalForce, totalForce, wind)
 
   applyExternalForce(mesh, totalForce, timestep);
-  applyAdditionalPressureForces(mesh, timestep);
+  applyAdditionalPressureForces(mesh, pressure, timestep);
   applyVelocityDamping(mesh, damping);
   estimateProposedPosition(mesh, timestep);
 

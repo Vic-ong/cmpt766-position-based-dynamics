@@ -1,14 +1,19 @@
+const { scale } = require("gl-vec3");
 const { initRender, updateFrame, draw } = require('./utils/renderer');
 const { createAxes } = require('./meshes/axes');
 const { createRopeMesh, getRopeLinesMesh } = require('./meshes/ropes');
 const { solve } = require('./solvers/inflatableAirPuppetSolver');
 const { getColor } = require('./utils/color');
-const { degToRad } = require('./solvers/utils');
+const { getRandomInt, degToRad } = require('./solvers/utils');
 
 const TIMESTEP = 1 / 60;
 const ITERATIONS = 30;
 const DAMPING_COEFFICIENT = 0.99;
 const GRAVITY = [0, -10, 0];
+
+// Adjustable parameters
+const PRESSURE_STRENGTH = 1;
+const WIND_STRENGTH = 1;
 
 // Initializations
 initRender({
@@ -38,6 +43,11 @@ ropeMesh.attrs.constraints.positions = [
 
 // Get solver
 const solver = () => {
+  const pressure = [0, getRandomInt(10, 30), 0];
+  const wind = [getRandomInt(-20, 20), 0, getRandomInt(-20, 20)];
+  scale(pressure, pressure, PRESSURE_STRENGTH);
+  scale(wind, wind, WIND_STRENGTH);
+
   solve({
     mesh: ropeMesh,
     damping: DAMPING_COEFFICIENT,
@@ -45,6 +55,8 @@ const solver = () => {
     iterationCount: ITERATIONS,
     props: {
       gravity: GRAVITY,
+      pressure,
+      wind,
     },
   });
 };
