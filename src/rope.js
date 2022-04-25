@@ -16,7 +16,7 @@ const main = () => {
   // Initializations
   initRender({
     camera: {
-      center: [3, 0, 0],
+      center: [3, -3, 0],
       distance: 25,
       theta: degToRad(80),
       phi: degToRad(10),

@@ -83,7 +83,6 @@ module.exports = {
   applyExternalForce,
   applyVelocityDamping,
   estimateProposedPosition,
-  generateCollisionConstraints,
   projectDistanceConstraints,
   updateVelocities,
   updatePositions,

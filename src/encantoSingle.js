@@ -30,7 +30,7 @@ const main = () => {
     timestep: TIMESTEP,
     gapLength: GAP_LENGTH,
     force: [0, 10, 0],
-    reverse: true,
+    reverse: false,
   });
 
   console.log(roofMesh);

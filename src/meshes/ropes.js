@@ -63,7 +63,6 @@ const createEncantoRoofMesh = ({
   mass,
   offset,
   color,
-  timestep = 1 / 60,
   gapLength = 3,
   force = [0, 5, 0],
   time = {
